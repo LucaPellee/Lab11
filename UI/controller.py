@@ -29,10 +29,17 @@ class Controller:
             self._view.create_alert("Inserire entrambi i valori")
             return
         else:
-            self._model.creaGrafo(colore)
+            self._model.creaGrafo(colore, anno)
             nNodes = self._model.getNumNodes()
+            nEdges = self._model.getNumEdges()
             self._view.txtOut.controls.clear()
             self._view.txtOut.controls.append(ft.Text(f"Numero di vertici: {nNodes}"))
+            self._view.txtOut.controls.append(ft.Text(f"Numero di archi: {nEdges}"))
+            listaTopArchi = self._model.cercaArchi()
+            listaNodiRip = self._model.cercaNodiRip(listaTopArchi)
+            for a in listaTopArchi:
+                self._view.txtOut.controls.append(ft.Text(f"Arco da {a[0]} a  {a[1]}, peso = {a[2]}"))
+            self._view.txtOut.controls.append(ft.Text(f"I nodi ripetuti sono: {[str(p.Product_number) for p in listaNodiRip]}"))
             self._view.update_page()
 
 

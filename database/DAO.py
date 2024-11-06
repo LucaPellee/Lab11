@@ -53,3 +53,23 @@ class DAO():
             cursor.close()
             cnx.close()
             return result
+
+    @staticmethod
+    def getArchi(anno):
+        cnx = DBConnect.get_connection()
+        result = []
+        if cnx is None:
+            print("Connessione fallita")
+        else:
+            cursor = cnx.cursor()
+            query = """select gds1.Product_number, gds2.Product_number, count(distinct(gds1.Date)) as peso
+                from go_daily_sales gds1, go_daily_sales gds2 
+                where gds1.Product_number < gds2.Product_number and gds1.Retailer_code = gds2.Retailer_code 
+                and year(gds1.`Date`) = %s and gds1.`Date` = gds2.`Date`
+                group by gds1.Product_number, gds2.Product_number"""
+            cursor.execute(query, (anno,))
+            for row in cursor:
+                result.append(row)
+            cursor.close()
+            cnx.close()
+            return result
